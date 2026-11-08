@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0f5132">
+<title>Pivot Sahara</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --vert:#13834f; --vert-f:#0b5a36; --vert-c:#e3f6ea;
+  --ble:#e8a317; --ble-c:#fff4d6;
+  --eau:#1f7ae0; --eau-c:#e2efff;
+  --sable:#e76f2e; --sable-c:#ffe9dc;
+  --violet:#7b4fd6; --violet-c:#efe7ff;
+  --rouge:#d93a4a; --rouge-c:#ffe3e6;
+  --encre:#16241c; --gris:#5d6b63; --ligne:#e4e9e5; --fond:#f6f4ee; --carte:#ffffff;
+  --r:20px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{background:var(--fond);color:var(--encre);font-family:Inter,system-ui,sans-serif;font-size:15px;line-height:1.45}
+body{padding-bottom:calc(84px + env(safe-area-inset-bottom))}
+h1,h2,h3,.titre{font-family:"Baloo 2",Inter,sans-serif;line-height:1.1}
+a{color:var(--eau)}
+.wrap{max-width:720px;margin:0 auto;padding:0 16px}
+
+/* HERO */
+.hero{position:relative;overflow:hidden;color:#fff;padding:calc(18px + env(safe-area-inset-top)) 0 26px;
+  background:radial-gradient(120% 90% at 85% 10%,#f6b93b 0%,rgba(246,185,59,0) 45%),
+             linear-gradient(160deg,#0b5a36 0%,#13834f 55%,#2aa36b 100%);
+  border-radius:0 0 32px 32px}
+.hero .wrap{display:flex;align-items:center;gap:14px}
+.hero h1{font-size:30px;font-weight:800;letter-spacing:.2px}
+.hero p{opacity:.92;font-size:14px;margin-top:2px}
+.hero .badge{display:inline-block;margin-top:8px;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);
+  padding:4px 10px;border-radius:99px;font-size:12px;font-weight:600}
+.pivotAnim{flex:0 0 112px;height:112px}
+.pivotAnim .bras{transform-origin:56px 56px;animation:tour 9s linear infinite}
+.pivotAnim .goutte{animation:pluie 1.2s ease-in infinite}
+@keyframes tour{to{transform:rotate(360deg)}}
+@keyframes pluie{0%{opacity:0;transform:translateY(-3px)}50%{opacity:1}100%{opacity:0;transform:translateY(4px)}}
+
+/* VUES */
+.vue{display:none;animation:entre .35s ease}
+.vue.on{display:block}
+@keyframes entre{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.sec{margin:22px 0 10px;display:flex;align-items:center;gap:8px}
+.sec h2{font-size:22px;font-weight:800}
+.sec .pastille{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;font-size:17px}
+.sous{color:var(--gris);font-size:13.5px;margin:-4px 0 12px}
+
+.carte{background:var(--carte);border-radius:var(--r);padding:16px;box-shadow:0 1px 0 rgba(0,0,0,.03),0 6px 22px rgba(19,60,40,.07);margin-bottom:12px}
+.grille{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.stat{border-radius:18px;padding:14px;position:relative;overflow:hidden}
+.stat .v{font-family:"Baloo 2";font-size:28px;font-weight:800;line-height:1}
+.stat .l{font-size:12.5px;margin-top:6px;font-weight:500;opacity:.85}
+.stat .ico{position:absolute;right:10px;top:8px;font-size:22px;opacity:.9}
+.c-vert{background:var(--vert-c);color:var(--vert-f)}
+.c-ble{background:var(--ble-c);color:#8a5a00}
+.c-eau{background:var(--eau-c);color:#0d4fa0}
+.c-sable{background:var(--sable-c);color:#9a3d0c}
+.c-violet{background:var(--violet-c);color:#4b2a99}
+.c-rouge{background:var(--rouge-c);color:#9b1c2a}
+
+.alerte{display:flex;gap:12px;align-items:flex-start;padding:14px;border-radius:16px;margin-bottom:10px}
+.alerte b{display:block;margin-bottom:2px}
+.alerte .e{font-size:22px;line-height:1}
+.src{font-size:11.5px;color:var(--gris);margin-top:6px}
+
+/* FORM */
+label.ch{display:block;font-size:12.5px;font-weight:600;color:var(--gris);margin-bottom:5px}
+.champ{margin-bottom:12px}
+input,select,textarea{width:100%;font:inherit;font-size:16px;padding:12px 13px;border-radius:14px;border:1.5px solid var(--ligne);background:#fbfcfb;color:var(--encre);outline:none;transition:.15s}
+input:focus,select:focus,textarea:focus{border-color:var(--vert);background:#fff;box-shadow:0 0 0 4px rgba(19,131,79,.12)}
+.deux{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.unite{position:relative}.unite span{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:12.5px;color:var(--gris);pointer-events:none}
+.unite input{padding-right:58px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:14px;padding:13px 18px;font:600 15px Inter;cursor:pointer;background:var(--vert);color:#fff;box-shadow:0 6px 16px rgba(19,131,79,.28);transition:transform .1s}
+.btn:active{transform:scale(.97)}
+.btn.sec2{background:#fff;color:var(--vert-f);border:1.5px solid var(--ligne);box-shadow:none}
+.btn.plein{width:100%}
+
+.res{border-radius:18px;padding:14px;margin-top:6px}
+.ligne{display:flex;justify-content:space-between;align-items:baseline;padding:8px 0;border-bottom:1px dashed rgba(0,0,0,.08);gap:10px}
+.ligne:last-child{border-bottom:0}
+.ligne .k{font-size:13.5px}
+.ligne .val{font-family:"Baloo 2";font-weight:800;font-size:19px;white-space:nowrap}
+.jauge{height:12px;border-radius:99px;background:rgba(0,0,0,.07);overflow:hidden;margin:8px 0 4px}
+.jauge i{display:block;height:100%;border-radius:99px;transition:width .5s}
+.verdict{margin-top:10px;padding:12px 14px;border-radius:14px;font-weight:600;font-size:14px}
+
+/* CULTURES */
+.chips{display:flex;gap:8px;overflow-x:auto;padding:2px 0 10px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:0 0 auto;border:1.5px solid var(--ligne);background:#fff;border-radius:99px;padding:9px 14px;font:600 14px Inter;cursor:pointer;display:flex;gap:6px;align-items:center}
+.chip.on{color:#fff;border-color:transparent}
+.fiche-tete{border-radius:22px;padding:18px;color:#fff;position:relative;overflow:hidden;margin-bottom:12px}
+.fiche-tete h3{font-size:26px;font-weight:800}
+.fiche-tete .emo{position:absolute;right:14px;top:6px;font-size:58px;opacity:.95}
+.fiche-tete p{opacity:.95;font-size:13.5px;max-width:78%}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}
+.kpis div{background:rgba(255,255,255,.2);border-radius:14px;padding:9px}
+.kpis b{display:block;font-family:"Baloo 2";font-size:15.5px;line-height:1.1}
+.kpis small{font-size:11px;opacity:.95}
+ul.puces{list-style:none}
+ul.puces li{padding:7px 0 7px 26px;position:relative;font-size:14px}
+ul.puces li:before{content:"";position:absolute;left:4px;top:13px;width:10px;height:10px;border-radius:4px;background:var(--pc,var(--vert))}
+
+/* CALENDRIER */
+.cal{overflow-x:auto}
+.cal table{border-collapse:separate;border-spacing:3px;min-width:560px;width:100%}
+.cal th{font-size:11px;color:var(--gris);font-weight:600}
+.cal td{height:26px;border-radius:7px;background:#f0f1ec}
+.cal td.nom{background:none;font-size:12.5px;font-weight:700;white-space:nowrap;padding-right:6px}
+.leg{display:flex;flex-wrap:wrap;gap:10px;font-size:12px;color:var(--gris);margin-top:8px}
+.leg i{display:inline-block;width:12px;height:12px;border-radius:4px;vertical-align:-2px;margin-right:4px}
+
+/* CHECKLIST */
+.etape{display:flex;gap:12px;padding:13px;border-radius:16px;background:#fff;margin-bottom:8px;border:1.5px solid var(--ligne);cursor:pointer;transition:.2s}
+.etape .case{flex:0 0 28px;height:28px;border-radius:9px;border:2px solid #c9d3cc;display:grid;place-items:center;color:#fff;font-weight:800;transition:.2s}
+.etape.fait{background:var(--vert-c);border-color:#bfe6cf}
+.etape.fait .case{background:var(--vert);border-color:var(--vert)}
+.etape.fait b{text-decoration:line-through;opacity:.7}
+.etape small{display:block;color:var(--gris);font-size:12.5px;margin-top:2px}
+.prog{display:flex;align-items:center;gap:12px}
+.anneau{width:64px;height:64px}
+
+/* OUTILS */
+.outil{display:flex;gap:12px;align-items:flex-start;padding:13px;border-radius:16px;background:#fff;margin-bottom:8px;border:1.5px solid var(--ligne);text-decoration:none;color:inherit}
+.outil .lo{flex:0 0 44px;height:44px;border-radius:13px;display:grid;place-items:center;font-size:22px}
+.outil b{display:block}
+.outil small{color:var(--gris);font-size:12.5px}
+.tag{display:inline-block;font-size:10.5px;font-weight:700;padding:2px 7px;border-radius:99px;margin-left:4px;vertical-align:1px}
+
+/* JOURNAL */
+.entree{display:flex;gap:12px;padding:12px;border-radius:16px;background:#fff;margin-bottom:8px;box-shadow:0 3px 12px rgba(19,60,40,.05)}
+.entree .ic{flex:0 0 42px;height:42px;border-radius:13px;display:grid;place-items:center;font-size:20px}
+.entree .m{flex:1;min-width:0}
+.entree .m b{display:block;font-size:14.5px}
+.entree .m small{color:var(--gris);font-size:12px}
+.entree .m p{font-size:13.5px;margin-top:3px;word-wrap:break-word}
+.entree .x{border:0;background:none;color:#a8b2ac;font-size:18px;cursor:pointer;align-self:flex-start}
+.etat{font-size:12.5px;padding:8px 12px;border-radius:12px;margin-bottom:10px}
+
+.edit-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.edit-grid label{font-size:11px;color:var(--gris);font-weight:600;text-align:center}
+.edit-grid input{padding:8px 6px;text-align:center;font-size:15px}
+.ferme-tete{display:flex;align-items:center;gap:12px}
+.ferme-tete .av{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;font-size:28px;background:linear-gradient(135deg,#f6b93b,#e76f2e)}
+/* NAV */
+nav.bas{position:fixed;left:0;right:0;bottom:0;z-index:20;background:rgba(255,255,255,.94);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  border-top:1px solid var(--ligne);padding:6px 6px calc(6px + env(safe-area-inset-bottom));display:flex;justify-content:space-around}
+nav.bas button{flex:1;border:0;background:none;font:600 10.5px Inter;color:#7b8780;display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 0;cursor:pointer}
+nav.bas button .i{font-size:21px;width:42px;height:30px;border-radius:12px;display:grid;place-items:center;transition:.2s}
+nav.bas button.on{color:var(--vert-f)}
+nav.bas button.on .i{background:var(--vert-c)}
+
+/* IA */
+.fab{position:fixed;right:16px;bottom:calc(92px + env(safe-area-inset-bottom));z-index:21;border:0;border-radius:99px;padding:12px 16px;
+  font:700 14px Inter;color:#fff;background:linear-gradient(135deg,#7b4fd6,#1f7ae0);box-shadow:0 10px 26px rgba(91,60,200,.4);display:none;align-items:center;gap:8px;cursor:pointer}
+.fab.on{display:flex}
+.modal{position:fixed;inset:0;z-index:30;background:rgba(10,25,18,.45);display:none;align-items:flex-end;justify-content:center}
+.modal.on{display:flex}
+.feuille{background:#fff;width:100%;max-width:720px;max-height:88vh;border-radius:26px 26px 0 0;display:flex;flex-direction:column;padding-bottom:env(safe-area-inset-bottom);animation:monte .3s ease}
+@keyframes monte{from{transform:translateY(40px);opacity:.4}to{transform:none;opacity:1}}
+.feuille .tete{padding:16px 18px 10px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--ligne)}
+.feuille .tete h3{font-size:20px;flex:1}
+.fermer{border:0;background:#f0f2f0;width:34px;height:34px;border-radius:50%;font-size:18px;cursor:pointer}
+.fil{flex:1;overflow:auto;padding:14px 16px}
+.bulle{max-width:88%;padding:11px 13px;border-radius:16px;margin-bottom:8px;font-size:14.5px;white-space:pre-wrap;word-wrap:break-word}
+.bulle.moi{margin-left:auto;background:var(--vert);color:#fff;border-bottom-right-radius:5px}
+.bulle.lui{background:#f1f0fb;border-bottom-left-radius:5px}
+.saisie{display:flex;gap:8px;padding:10px 12px;border-top:1px solid var(--ligne);align-items:flex-end}
+.saisie textarea{min-height:46px;max-height:120px;resize:none}
+.photo{border:1.5px solid var(--ligne);background:#fff;border-radius:14px;width:46px;height:46px;font-size:20px;display:grid;place-items:center;cursor:pointer;flex:0 0 46px}
+.idees{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.idees button{border:1.5px solid #ddd6f6;background:#faf8ff;color:#4b2a99;border-radius:99px;padding:7px 11px;font:600 12.5px Inter;cursor:pointer}
+.note{font-size:11.5px;color:var(--gris);text-align:center;padding:16px 0 6px}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <svg class="pivotAnim" viewBox="0 0 112 112" aria-hidden="true">
+      <circle cx="56" cy="56" r="52" fill="#f2c96a" opacity=".35"/>
+      <circle cx="56" cy="56" r="50" fill="#3cb371"/>
+      <circle cx="56" cy="56" r="38" fill="#5cc97f"/>
+      <circle cx="56" cy="56" r="26" fill="#7fd99a"/>
+      <circle cx="56" cy="56" r="14" fill="#a6e8b6"/>
+      <g class="bras">
+        <rect x="55" y="6" width="2.4" height="50" rx="1.2" fill="#ffffff"/>
+        <g fill="#cfe8ff">
+          <circle class="goutte" cx="52" cy="16" r="1.6"/>
+          <circle class="goutte" cx="60" cy="24" r="1.6" style="animation-delay:.3s"/>
+          <circle class="goutte" cx="52" cy="34" r="1.6" style="animation-delay:.6s"/>
+          <circle class="goutte" cx="60" cy="44" r="1.6" style="animation-delay:.9s"/>
+        </g>
+        <path d="M56 6 L48 28 L64 28 Z" fill="#ffffff" opacity=".18"/>
+      </g>
+      <circle cx="56" cy="56" r="5" fill="#ffffff"/><circle cx="56" cy="56" r="2.4" fill="#0b5a36"/>
+    </svg>
+    <div>
+      <h1>Pivot Sahara</h1>
+      <p>Ton copilote pour réussir la culture sous pivot dans le Sud algérien.</p>
+      <span class="badge" id="salut">🌱 Saison 2026-2027</span>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+<!-- ================= ACCUEIL ================= -->
+<section class="vue on" id="v-accueil">
+  <div class="sec"><span class="pastille c-sable">🏡</span><h2>Ma ferme</h2></div>
+  <div class="carte" id="ferme"></div>
+  <div class="sec"><span class="pastille c-ble">📊</span><h2>Les chiffres qui comptent</h2></div>
+  <div class="grille">
+    <div class="stat c-ble"><span class="ico">🌾</span><div class="v">60–80</div><div class="l">quintaux/ha de blé sous pivot au Sud</div></div>
+    <div class="stat c-rouge"><span class="ico">📉</span><div class="v">15</div><div class="l">q/ha : moyenne nationale du blé</div></div>
+    <div class="stat c-eau"><span class="ico">💧</span><div class="v">6 000</div><div class="l">m³ d'eau par hectare de blé</div></div>
+    <div class="stat c-vert"><span class="ico">✅</span><div class="v">40 q</div><div class="l">seuil de rentabilité du blé</div></div>
+    <div class="stat c-sable"><span class="ico">⚙️</span><div class="v">≈10 M</div><div class="l">DA, le prix d'un pivot</div></div>
+    <div class="stat c-violet"><span class="ico">🔁</span><div class="v">2</div><div class="l">récoltes/an : blé puis maïs</div></div>
+  </div>
+  <p class="src">Sources : TSA Algérie (reportages 2022-2025 à Adrar, El Oued, El Ménéa, Ouargla, Khenchela), APS, INRAA Adrar. Les chiffres varient selon la wilaya, l'eau et le savoir-faire.</p>
+
+  <div class="sec"><span class="pastille c-vert">🇩🇿</span><h2>Le marché en Algérie</h2></div>
+  <div class="carte">
+    <div class="ligne"><span class="k">Surfaces irriguées au Sud aujourd'hui</span><span class="val" style="color:var(--vert)">150 000 ha</span></div>
+    <div class="ligne"><span class="k">Objectif de l'État</span><span class="val" style="color:var(--vert)">1,5 M ha</span></div>
+    <div class="ligne"><span class="k">Céréales produites au Sud</span><span class="val" style="color:var(--ble)">≈ 3 M q</span></div>
+    <div class="ligne"><span class="k">Blé dur payé par la CCLS (2025)</span><span class="val" style="color:var(--sable)">6 000 DA/q</span></div>
+    <div class="ligne"><span class="k">Blé tendre payé par la CCLS (2025)</span><span class="val" style="color:var(--sable)">5 000 DA/q</span></div>
+    <div class="ligne"><span class="k">Bonus semence de blé</span><span class="val" style="color:var(--sable)">+1 000 DA/q</span></div>
+    <div class="ligne"><span class="k">Maïs grain importé chaque année</span><span class="val" style="color:var(--eau)">3,5 à 4 Mt</span></div>
+    <p class="src">L'État achète tout le blé (OAIC/CCLS) et pousse le maïs grain (contrats ONAB). Gros débouché assuré, mais prix fixés par l'État.</p>
+  </div>
+
+  <div class="sec"><span class="pastille c-rouge">⚠️</span><h2>Les 6 pièges du débutant</h2></div>
+  <div class="alerte c-rouge"><span class="e">🧂</span><div><b>Le sel, ennemi n°1</b>6 000 m³ d'une eau à 2 g/l laissent 12 tonnes de sel par hectare et par saison. Chaque dS/m de salinité en plus fait perdre 4 q/ha, et ça devient grave dès la 4ᵉ année.</div></div>
+  <div class="alerte c-sable"><span class="e">🌪️</span><div><b>La verse au sirocco</b>Avec beaucoup d'eau et d'azote, les blés à tiges longues se couchent sous le vent chaud. Choisis des variétés à paille courte.</div></div>
+  <div class="alerte c-eau"><span class="e">📉</span><div><b>La nappe qui baisse</b>À El Ménéa, le niveau de l'eau a baissé de plus de 30 m. Mesure le niveau de ton forage chaque année.</div></div>
+  <div class="alerte c-ble"><span class="e">💸</span><div><b>Tout coûte plus cher au Sud</b>Énergie, pièces, engrais, transport… Garde une réserve d'argent et ne compte pas uniquement sur les aides.</div></div>
+  <div class="alerte c-violet"><span class="e">🎓</span><div><b>Se lancer sans agronome</b>Beaucoup d'investisseurs arrivent sans connaissances agronomiques et plafonnent à 40-50 q. Le savoir-faire fait la différence entre 40 et 80 q.</div></div>
+  <div class="alerte c-vert"><span class="e">🌡️</span><div><b>La chaleur en fin de cycle</b>Sème à la bonne date : si le blé fleurit trop tard, la chaleur d'avril l'échaude. « On arrose, mais ça ne fait rien, il fait trop chaud. »</div></div>
+
+  <div class="sec"><span class="pastille c-eau">💡</span><h2>Ce qui fait gagner</h2></div>
+  <div class="carte">
+    <ul class="puces">
+      <li style="--pc:var(--eau)"><b>Pendillards</b> (tuyaux qui descendent jusqu'au sol) : jusqu'à +30 % de rendement et 25 à 30 % d'eau en moins (essai à Timimoun).</li>
+      <li style="--pc:var(--vert)"><b>Sondes d'humidité du sol</b> : pour arrêter de trop arroser, ce qui gaspille énergie et engrais.</li>
+      <li style="--pc:var(--ble)"><b>Semer dru et bien nourrir en azote</b> : c'est la condition pour viser 70-80 q.</li>
+      <li style="--pc:var(--sable)"><b>Deux cultures par an</b> : blé (nov→mai), puis maïs court de 90 jours (juin→sept).</li>
+      <li style="--pc:var(--violet)"><b>Produire de la semence</b> pour la CCLS : environ +1 000 DA par quintal.</li>
+      <li style="--pc:var(--rouge)"><b>Herbicides</b> : devenus indispensables sous pivot.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ================= PIVOT ================= -->
+<section class="vue" id="v-pivot">
+  <div class="sec"><span class="pastille c-eau">⭕</span><h2>Calculateur de pivot</h2></div>
+  <p class="sous">Entre les mesures de ton pivot et de ton forage : je calcule tout le reste.</p>
+  <div class="carte">
+    <div class="deux">
+      <div class="champ"><label class="ch">Longueur du pivot (rayon)</label><div class="unite"><input id="p-r" type="number" inputmode="decimal" value="400"><span>m</span></div></div>
+      <div class="champ"><label class="ch">Débit du forage</label><div class="unite"><input id="p-q" type="number" inputmode="decimal" value="45"><span>l/s</span></div></div>
+    </div>
+    <div class="deux">
+      <div class="champ"><label class="ch">Culture</label><select id="p-c"></select></div>
+      <div class="champ"><label class="ch">Mois</label><select id="p-m"></select></div>
+    </div>
+    <div class="deux">
+      <div class="champ"><label class="ch">Pompage possible / jour</label><div class="unite"><input id="p-h" type="number" inputmode="decimal" value="20"><span>h</span></div></div>
+      <div class="champ"><label class="ch">Temps d'un tour à 100 %</label><div class="unite"><input id="p-t" type="number" inputmode="decimal" value="18"><span>h</span></div></div>
+    </div>
+  </div>
+  <div class="res c-eau" id="p-res"></div>
+
+  <div class="sec"><span class="pastille c-rouge">🧂</span><h2>Test de ton eau (sel)</h2></div>
+  <p class="sous">Fais analyser l'eau du forage AVANT d'acheter le pivot. Mets le résultat ici.</p>
+  <div class="carte">
+    <div class="deux">
+      <div class="champ"><label class="ch">Sel dans l'eau</label><div class="unite"><input id="s-g" type="number" inputmode="decimal" step="0.1" value="2"><span>g/l</span></div></div>
+      <div class="champ"><label class="ch">Eau apportée / saison</label><div class="unite"><input id="s-v" type="number" inputmode="decimal" value="6000"><span>m³/ha</span></div></div>
+    </div>
+    <div class="champ"><label class="ch">Culture</label><select id="s-c"></select></div>
+  </div>
+  <div class="res c-rouge" id="s-res"></div>
+  <p class="src">Repères de tolérance au sel : FAO (Ayers & Westcot, salinité du sol ECe à partir de laquelle le rendement baisse). Conversion approximative : 1 g/l ≈ 1,56 dS/m.</p>
+</section>
+
+<!-- ================= CULTURES ================= -->
+<section class="vue" id="v-cultures">
+  <div class="sec"><span class="pastille c-ble">🌾</span><h2>Fiches cultures</h2></div>
+  <div class="chips" id="c-chips"></div>
+  <div id="c-fiche"></div>
+
+  <div class="sec"><span class="pastille c-vert">📅</span><h2>Calendrier du Sud</h2></div><p class="sous">Glisse le tableau vers la gauche pour voir toute l'année →</p>
+  <div class="carte cal" id="cal"></div>
+</section>
+
+<!-- ================= ARGENT ================= -->
+<section class="vue" id="v-argent">
+  <div class="sec"><span class="pastille c-sable">💰</span><h2>Rentabilité</h2></div>
+  <p class="sous">Valeurs d'exemple : remplace-les par tes vrais devis. Tout se recalcule en direct.</p>
+  <div class="carte">
+    <div class="deux">
+      <div class="champ"><label class="ch">Culture</label><select id="a-c"></select></div>
+      <div class="champ"><label class="ch">Surface cultivée</label><div class="unite"><input id="a-s" type="number" inputmode="decimal" value="50"><span>ha</span></div></div>
+    </div>
+    <div class="deux">
+      <div class="champ"><label class="ch" id="a-rl">Rendement</label><div class="unite"><input id="a-r" type="number" inputmode="decimal"><span id="a-ru">q/ha</span></div></div>
+      <div class="champ"><label class="ch">Prix de vente</label><div class="unite"><input id="a-p" type="number" inputmode="decimal"><span id="a-pu">DA/q</span></div></div>
+    </div>
+  </div>
+  <div class="carte">
+    <h3 style="font-size:18px;margin-bottom:10px">Dépenses par hectare (DA)</h3>
+    <div id="a-postes"></div>
+  </div>
+  <div class="carte">
+    <h3 style="font-size:18px;margin-bottom:10px">Investissement (amorti)</h3>
+    <div class="deux">
+      <div class="champ"><label class="ch">Pivot</label><div class="unite"><input id="a-piv" type="number" inputmode="decimal" value="10000000"><span>DA</span></div></div>
+      <div class="champ"><label class="ch">Forage + pompe</label><div class="unite"><input id="a-for" type="number" inputmode="decimal" value="6000000"><span>DA</span></div></div>
+    </div>
+    <div class="deux">
+      <div class="champ"><label class="ch">Aides / subvention</label><div class="unite"><input id="a-aid" type="number" inputmode="decimal" value="0"><span>DA</span></div></div>
+      <div class="champ"><label class="ch">Durée d'amortissement</label><div class="unite"><input id="a-dur" type="number" inputmode="decimal" value="10"><span>ans</span></div></div>
+    </div>
+    <div class="champ"><label class="ch">Cultures par an sur ce pivot (pour partager l'amortissement)</label><select id="a-nb"><option value="1">1 culture</option><option value="2" selected>2 cultures (blé + maïs)</option></select></div>
+    <p class="src">Le prix du forage dépend énormément de la profondeur : demande 2 ou 3 devis.</p>
+  </div>
+  <div id="a-res"></div>
+</section>
+
+<!-- ================= DÉMARRER ================= -->
+<section class="vue" id="v-demarrer">
+  <div class="sec"><span class="pastille c-vert">🚀</span><h2>Feuille de route</h2></div>
+  <div class="carte prog">
+    <svg class="anneau" viewBox="0 0 64 64"><circle cx="32" cy="32" r="27" fill="none" stroke="#e8efe9" stroke-width="8"/>
+      <circle id="anneau" cx="32" cy="32" r="27" fill="none" stroke="#13834f" stroke-width="8" stroke-linecap="round" stroke-dasharray="169.6" stroke-dashoffset="169.6" transform="rotate(-90 32 32)" style="transition:stroke-dashoffset .5s"/>
+      <text id="anneauT" x="32" y="37" text-anchor="middle" font-family="Baloo 2" font-weight="800" font-size="16" fill="#0b5a36">0%</text></svg>
+    <div><b style="font-size:16px">Étapes pour lancer le projet</b><div class="src" id="ck-etat">Coche au fur et à mesure.</div></div>
+  </div>
+  <div id="checklist"></div>
+
+  <div class="sec"><span class="pastille c-violet">🏛️</span><h2>Organismes à connaître</h2></div>
+  <div id="orgs"></div>
+
+  <div class="sec"><span class="pastille c-eau">📱</span><h2>Les meilleures applis</h2></div>
+  <p class="sous">Ce qu'utilisent les pros dans le monde. Commence par les gratuites.</p>
+  <div id="outils"></div>
+</section>
+
+<!-- ================= JOURNAL ================= -->
+<section class="vue" id="v-journal">
+  <div class="sec"><span class="pastille c-violet">📒</span><h2>Journal du pivot</h2></div>
+  <div class="etat c-vert" id="j-etat">Chargement…</div>
+  <div class="grille" id="j-tot" style="margin-bottom:12px"></div>
+  <div class="carte">
+    <div class="deux">
+      <div class="champ"><label class="ch">Type</label><select id="j-type"></select></div>
+      <div class="champ"><label class="ch">Date</label><input id="j-date" type="date"></div>
+    </div>
+    <div class="deux">
+      <div class="champ"><label class="ch" id="j-ql">Quantité</label><input id="j-q" type="number" inputmode="decimal" placeholder="ex. 800"></div>
+      <div class="champ"><label class="ch">Coût (DA)</label><input id="j-cout" type="number" inputmode="decimal" placeholder="0"></div>
+    </div>
+    <div class="champ"><label class="ch">Note</label><textarea id="j-note" rows="2" placeholder="ex. Tour complet à 60 %, pression OK"></textarea></div>
+    <button class="btn plein" id="j-add">＋ Ajouter au journal</button>
+  </div>
+  <div class="chips" id="j-filtres"></div>
+  <div id="j-liste"></div>
+</section>
+
+<p class="note">Pivot Sahara · repères indicatifs, à confirmer avec la DSA, l'ITDAS ou l'ITGC de ta wilaya.</p>
+</main>
+
+<button class="fab" id="fab">🤖 Demande à l'agronome</button>
+<div class="modal" id="modal">
+  <div class="feuille">
+    <div class="tete"><span style="font-size:24px">🤖</span><h3>Agronome IA</h3><button class="fermer" id="fermer">✕</button></div>
+    <div class="fil" id="fil">
+      <div class="bulle lui">Salam ! Pose-moi ta question sur ton pivot, ton blé, l'engrais, une panne… Tu peux aussi envoyer une photo d'une feuille ou d'un champ 📷</div>
+      <div class="idees" id="idees"></div>
+    </div>
+    <div class="saisie">
+      <label class="photo" title="Photo">📷<input type="file" accept="image/*" id="ia-img" hidden></label>
+      <textarea id="ia-txt" rows="1" placeholder="Ta question…"></textarea>
+      <button class="btn" id="ia-go" style="padding:13px 15px">➤</button>
+    </div>
+  </div>
+</div>
+
+<nav class="bas" id="nav">
+  <button data-v="accueil" class="on"><span class="i">🏠</span>Accueil</button>
+  <button data-v="pivot"><span class="i">⭕</span>Pivot</button>
+  <button data-v="cultures"><span class="i">🌾</span>Cultures</button>
+  <button data-v="argent"><span class="i">💰</span>Argent</button>
+  <button data-v="demarrer"><span class="i">🚀</span>Démarrer</button>
+  <button data-v="journal"><span class="i">📒</span>Journal</button>
+</nav>
+
+<script>
+/* ============ DONNÉES ============ */
+const MOIS=["Jan","Fév","Mar","Avr","Mai","Juin","Juil","Août","Sep","Oct","Nov","Déc"];
+// ETc indicatives (mm/jour) Sud algérien, 0 = hors culture
+const CULTURES={
+ bledur:{nom:"Blé dur",emo:"🌾",col:"#e8a317",grad:"linear-gradient(135deg,#f0b429,#d48806)",unite:"q",rdt:65,prix:6000,
+   eau:"5 500–7 000 m³/ha",rdtTxt:"50 – 80 q/ha",cycle:"Nov → Mai",
+   intro:"La culture n°1 du Sud : l'État achète toute la récolte via la CCLS.",
+   etc:[2.5,3.5,4.5,4.5,1,0,0,0,0,0,1,2], cal:{s:[10,11],c:[0,1,2,3],r:[4]},
+   points:["Semis de mi-novembre à mi-décembre : si tu sèmes trop tard, la chaleur d'avril échaude le grain.","Semences certifiées CCLS, semer dru (densité élevée). Variétés citées au Sud : Oued Bared, Maouna.","Azote : environ 3,5 unités par quintal visé (70 q ≈ 245 unités N), en plusieurs apports par le pivot (fertigation).","Désherbage obligatoire. Prévoir une protection contre les maladies.","Les variétés à paille longue versent au sirocco : préfère des pailles courtes.","Récolte fin avril à mai. Bonus de 1 000 DA/q si tu produis de la semence."],
+   sel:5.9},
+ bletendre:{nom:"Blé tendre",emo:"🍞",col:"#d4a017",grad:"linear-gradient(135deg,#e6b422,#b8860b)",unite:"q",rdt:65,prix:5000,
+   eau:"5 500–7 000 m³/ha",rdtTxt:"60 – 77 q/ha",cycle:"Nov → Mai",
+   intro:"Il produit souvent un peu plus que le blé dur, mais il est payé moins cher (5 000 DA/q).",
+   etc:[2.5,3.5,4.5,4.5,1,0,0,0,0,0,1,2], cal:{s:[10,11],c:[0,1,2,3],r:[4]},
+   points:["Même itinéraire que le blé dur : semis nov-déc, récolte en mai.","Record de 70 q/ha à El Oued en 2025, 77 q/ha chez un investisseur bien conseillé.","Utile en rotation pour casser les maladies du blé dur.","Compare la marge avec le blé dur dans l'onglet Argent avant de choisir."],
+   sel:6},
+ orge:{nom:"Orge",emo:"🌿",col:"#8bbf3f",grad:"linear-gradient(135deg,#9acd32,#5f9e1f)",unite:"q",rdt:45,prix:4500,
+   eau:"4 500–5 500 m³/ha",rdtTxt:"30 – 50 q/ha",cycle:"Nov → Avril",
+   intro:"Plus rustique, elle supporte mieux le sel et la chaleur, et se récolte plus tôt.",
+   etc:[2.5,3.5,4.5,1.5,0,0,0,0,0,0,1,2], cal:{s:[10,11],c:[0,1,2],r:[3]},
+   points:["Bonne option si ton eau est un peu salée : l'orge tolère jusqu'à environ 8 dS/m.","À Ghardaïa : 26 q/ha en moyenne, jusqu'à 45 q/ha au mieux (campagne 2018-2019).","Sa paille et son grain se vendent bien aux éleveurs.","Prix d'exemple dans l'appli : demande le prix exact à ta CCLS."],
+   sel:8},
+ maisens:{nom:"Maïs ensilage",emo:"🐄",col:"#2e9e5b",grad:"linear-gradient(135deg,#34c26f,#13834f)",unite:"t",rdt:37,prix:14500,
+   eau:"≈ 6 000 m³/ha",rdtTxt:"37 – 50 t/ha",cycle:"Juin → Sept (90 j)",
+   intro:"La 2ᵉ culture idéale après le blé : 80 à 90 jours, très demandée par les éleveurs laitiers.",
+   etc:[0,0,0,0,0,3,7,6,1,0,0,0], cal:{s:[5],c:[6,7],r:[8]},
+   points:["Semis en juin juste après la moisson du blé, récolte au bout de 80 à 90 jours.","37 t/ha en moyenne, soit environ 536 000 DA/ha de produit brut (contre 250 000 DA en maïs grain).","Vendu en balles enrubannées, à prix libre. Les acheteurs viennent de toute l'Algérie (El Ménéa).","À savoir : l'État donne maintenant la priorité au maïs grain plutôt qu'à l'ensilage.","Très sensible au sel : il lui faut une eau douce."],
+   sel:1.8},
+ maisgrain:{nom:"Maïs grain",emo:"🌽",col:"#f4c20d",grad:"linear-gradient(135deg,#ffd43b,#e8a317)",unite:"q",rdt:50,prix:5000,
+   eau:"6 000–8 000 m³/ha",rdtTxt:"50 – 91 q/ha",cycle:"Juil → Déc (130-150 j)",
+   intro:"Culture stratégique soutenue par l'État : l'Algérie importe 3,5 à 4 millions de tonnes de maïs par an.",
+   etc:[0,0,0,0,0,0,3,7,6,4,2,0], cal:{s:[6],c:[7,8,9,10],r:[11]},
+   points:["Contrat avec l'ONAB, qui collecte et sèche le grain (Adrar, Timimoun).","50 q/ha en moyenne, jusqu'à 82-91 q/ha chez les meilleurs à Adrar.","Plus long et plus gourmand en eau que l'ensilage (130-150 jours).","Récolte en décembre, puis on sème le blé tout de suite.","Prix d'exemple dans l'appli : vérifie le prix du contrat ONAB."],
+   sel:1.7},
+ luzerne:{nom:"Luzerne",emo:"🍀",col:"#7b4fd6",grad:"linear-gradient(135deg,#9b6dff,#6a3fc9)",unite:"t",rdt:18,prix:25000,
+   eau:"très élevée (toute l'année)",rdtTxt:"plusieurs coupes/an",cycle:"Pluriannuelle",
+   intro:"Le fourrage des éleveurs : elle reste en place plusieurs années, avec des coupes régulières.",
+   etc:[2,3,4.5,6,7,8,8.5,8,6.5,4.5,3,2], cal:{s:[9,10],c:[0,1,2,3,4,5,6,7,8,9,10,11],r:[3,4,5,6,7,8,9]},
+   points:["Elle consomme beaucoup d'eau parce qu'elle est irriguée toute l'année : vérifie que ton forage suit.","Vendue en foin aux éleveurs, à prix libre et variable.","Améliore le sol (fixe l'azote) avant de revenir au blé.","Chiffres de rendement et de prix donnés à titre d'exemple : demande aux éleveurs de ta région."],
+   sel:2},
+ pdt:{nom:"Pomme de terre",emo:"🥔",col:"#b5651d",grad:"linear-gradient(135deg,#d2884a,#9c5418)",unite:"q",rdt:350,prix:3500,
+   eau:"élevée",rdtTxt:"selon la saison",cycle:"Saison / arrière-saison",
+   intro:"La spécialité d'El Oued sous petits pivots. Elle rapporte gros, mais le risque est gros aussi.",
+   etc:[2.5,3.5,4.5,3,0,0,0,0,2,3.5,3,2], cal:{s:[8,9,11],c:[0,1,2,9,10,11],r:[3,4,0]},
+   points:["À El Oued : location de 80 000 à 140 000 DA/ha, plus 200 000 DA pour installer un pivot.","Semence d'arrière-saison 50-90 DA/kg, de saison 150-220 DA/kg.","Jusqu'à 4 q d'engrais par hectare (≈ 50 000 DA en 2019). Ouvriers ≈ 50 000 DA/mois.","Le prix de vente change beaucoup d'une saison à l'autre : c'est le gros risque.","Rendement et prix dans l'appli donnés à titre d'exemple."],
+   sel:1.7}
+};
+const POSTES=[["semences","🌱 Semences"],["engrais","🧪 Engrais"],["phyto","🛡️ Désherbants / traitements"],["energie","⚡ Énergie (pompage, pivot)"],["mo","👷 Main-d'œuvre"],["recolte","🚜 Récolte + transport"],["entretien","🔧 Entretien, pièces"],["foncier","📄 Redevance / location"],["divers","📦 Assurance, divers"]];
+const CHARGES={
+ bledur:{semences:45000,engrais:90000,phyto:22000,energie:30000,mo:22000,recolte:18000,entretien:12000,foncier:2000,divers:5000},
+ bletendre:{semences:42000,engrais:90000,phyto:22000,energie:30000,mo:22000,recolte:18000,entretien:12000,foncier:2000,divers:5000},
+ orge:{semences:35000,engrais:60000,phyto:15000,energie:25000,mo:20000,recolte:16000,entretien:10000,foncier:2000,divers:4000},
+ maisens:{semences:70000,engrais:90000,phyto:20000,energie:35000,mo:30000,recolte:90000,entretien:12000,foncier:2000,divers:6000},
+ maisgrain:{semences:70000,engrais:90000,phyto:20000,energie:45000,mo:25000,recolte:30000,entretien:12000,foncier:2000,divers:6000},
+ luzerne:{semences:40000,engrais:40000,phyto:10000,energie:60000,mo:40000,recolte:60000,entretien:15000,foncier:2000,divers:6000},
+ pdt:{semences:450000,engrais:80000,phyto:60000,energie:40000,mo:120000,recolte:80000,entretien:15000,foncier:110000,divers:15000}
+};
+const ETAPES=[
+ ["foncier","📄","Obtenir le terrain","Concession ODAS (20 wilayas du Sud, demande en ligne, cahier des charges + business plan), ou ONTA hors périmètres ODAS. Décret 21-432. Interdit de louer ou de sous-louer la concession."],
+ ["eau","💧","Étude de l'eau + autorisation de forage","Direction de l'hydraulique de la wilaya. Demande le débit attendu (l/s) et la profondeur de la nappe."],
+ ["analyse","🧪","Analyse de l'eau ET du sol","Salinité (g/l ou dS/m), pH, calcaire. À faire AVANT d'acheter le pivot : teste ton eau dans l'onglet Pivot."],
+ ["energie","⚡","Électricité","Demande de raccordement Sonelgaz (souvent long) ou groupe électrogène / solaire. C'est le plus gros coût à l'usage."],
+ ["finance","🏦","Financement","Crédit agricole bonifié (BADR, crédit Rfig), aides de l'État pour le forage et le pivot. Renseigne-toi à la DSA et à la Chambre d'agriculture."],
+ ["pivot","⭕","Choisir le pivot","Compare 3 devis : AGM (fabriqué en Algérie depuis 2024) et les marques importées (Valley, Zimmatic…). Demande des pendillards et une commande à distance."],
+ ["agronome","🎓","Recruter un technicien agronome","Sur place toute la saison (centre de formation de Touggourt, ITDAS). C'est lui qui fait passer de 40 à 70 q."],
+ ["debouche","🤝","Sécuriser la vente","Convention CCLS/OAIC pour le blé, contrat ONAB pour le maïs grain, éleveurs pour l'ensilage et la luzerne."],
+ ["assurance","🛡️","Assurer","CRMA : assurance des cultures et du matériel (incendie, tempête de sable, panne)."],
+ ["intrants","🌱","Commander semences et engrais","Semences certifiées CCLS, engrais (azote, phosphore, potasse), herbicides. Les fournisseurs proposent des programmes « clés en main »."],
+ ["sondes","📡","Sondes d'humidité + suivi satellite","Sondes pour arroser juste ce qu'il faut. OneSoil (gratuit) pour voir la santé du champ depuis ton téléphone."],
+ ["semis","🚜","Semer à la bonne date","Blé : mi-novembre à mi-décembre. Note chaque arrosage et chaque apport dans le Journal."]
+];
+const ORGS=[
+ ["🏜️","ODAS","Office de développement de l'agriculture industrielle en terres sahariennes : attribue les terres du Sud en concession.","c-sable"],
+ ["🌾","OAIC / CCLS","Office des céréales et coopératives : achètent ton blé, vendent semences et engrais.","c-ble"],
+ ["🐔","ONAB","Office des aliments du bétail : contrats pour le maïs grain.","c-ble"],
+ ["🔬","ITDAS / INRAA Adrar","Instituts techniques de l'agriculture saharienne : conseils, essais de variétés.","c-violet"],
+ ["📘","ITGC","Institut technique des grandes cultures : itinéraires techniques pour les céréales.","c-violet"],
+ ["🏛️","DSA de la wilaya","Direction des services agricoles : aides, dossiers, vulgarisation.","c-vert"],
+ ["🏦","BADR / CRMA","Banque agricole (crédit Rfig) et mutuelle d'assurance agricole.","c-eau"]
+];
+const OUTILS=[
+ ["🛰️","OneSoil","https://onesoil.ai","Gratuit, sans pub. Images satellite (NDVI) pour repérer les zones malades de ton cercle, plus la météo.","Gratuit","#13834f"],
+ ["🌍","EOSDA Crop Monitoring","https://eos.com/products/crop-monitoring/","Satellite, météo sur 14 jours, historique du champ, cartes de productivité.","Gratuit/Pro","#1f7ae0"],
+ ["📲","FieldNET (Lindsay / Zimmatic)","https://www.myfieldnet.com","La référence pour piloter un pivot à distance : marche/arrêt, sens, vitesse, pression, débit, alertes. FieldNET Advisor dit quand arroser.","Matériel","#e76f2e"],
+ ["🔵","Valley 365 (Valley Irrigation)","https://www.valleyirrigation.com","L'équivalent chez Valley : surveiller et commander ses pivots depuis son téléphone.","Matériel","#7b4fd6"],
+ ["💧","FAO CROPWAT / AquaCrop","https://www.fao.org/aquacrop/en/","Outils gratuits de la FAO pour calculer les besoins en eau et simuler le rendement selon l'irrigation.","Gratuit","#13834f"],
+ ["📡","Pivot Watch (Lindsay)","https://www.myfieldnet.com","Petit boîtier GPS à fixer sur n'importe quel pivot : position, état et vitesse sur ton téléphone.","Matériel","#e8a317"]
+];
+const TYPES={irrigation:["💧","Arrosage","m³","#1f7ae0","#e2efff"],engrais:["🧪","Engrais","kg","#13834f","#e3f6ea"],traitement:["🛡️","Traitement","l","#7b4fd6","#efe7ff"],semis:["🌱","Semis","kg","#2e9e5b","#e3f6ea"],recolte:["🌾","Récolte","q","#e8a317","#fff4d6"],panne:["🔧","Panne","","#d93a4a","#ffe3e6"],depense:["💸","Dépense","","#e76f2e","#ffe9dc"],note:["📝","Note","","#5d6b63","#eef1ee"]};
+
+/* ============ OUTILS ============ */
+const BASE=JSON.parse(JSON.stringify(CULTURES));
+const $=id=>document.getElementById(id);
+const fmt=(n,d=0)=>isFinite(n)?n.toLocaleString("fr-FR",{maximumFractionDigits:d,minimumFractionDigits:0}):"–";
+const num=id=>parseFloat(($(id).value||"").replace(",","."))||0;
+const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const LS={get(k,d){try{const v=localStorage.getItem("ps_"+k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem("ps_"+k,JSON.stringify(v))}catch(e){}}};
+function opts(sel,obj,val){sel.innerHTML=Object.entries(obj).map(([k,c])=>`<option value="${k}">${c.emo} ${c.nom}</option>`).join("");if(val)sel.value=val}
+
+/* ============ MES CHIFFRES ============ */
+function appliquerPerso(){
+  for(const k in CULTURES){const o=LS.get("cult_"+k,null);if(o)Object.assign(CULTURES[k],o)}
+}
+appliquerPerso();
+const FERME_DEF={nom:"Ma ferme",wilaya:"",pivots:1,rayon:400,debit:45,surface:50,associe:""};
+let ferme={...FERME_DEF,...LS.get("ferme",{})};
+function rendFerme(edit){
+  const f=ferme;
+  if(!edit){
+    const ha=Math.PI*f.rayon*f.rayon/1e4;
+    $("ferme").innerHTML=`<div class="ferme-tete"><span class="av">🌴</span><div style="flex:1"><b style="font-size:18px">${esc(f.nom)}</b><div class="src" style="margin:0">${esc(f.wilaya||"Wilaya non renseignée")}${f.associe?" · avec "+esc(f.associe):""}</div></div><button class="btn sec2" id="f-ed" style="padding:9px 13px">✏️ Modifier</button></div>
+    <div class="grille" style="margin-top:12px">
+      <div class="stat c-vert"><span class="ico">⭕</span><div class="v">${fmt(f.pivots)}</div><div class="l">pivot${f.pivots>1?"s":""} de ${fmt(f.rayon)} m</div></div>
+      <div class="stat c-ble"><span class="ico">🌾</span><div class="v">${fmt(ha*f.pivots,1)}</div><div class="l">ha irrigués au total</div></div>
+      <div class="stat c-eau"><span class="ico">🚰</span><div class="v">${fmt(f.debit)}</div><div class="l">l/s par forage (${fmt(f.debit*3.6)} m³/h)</div></div>
+      <div class="stat c-sable"><span class="ico">📐</span><div class="v">${fmt(f.surface)}</div><div class="l">ha de terrain</div></div>
+    </div>`;
+    $("f-ed").onclick=()=>rendFerme(true);
+  } else {
+    const ch=(id,l,v,t="text",u="")=>`<div class="champ"><label class="ch">${l}</label><div class="${u?"unite":""}"><input id="f-${id}" type="${t}" ${t==="number"?'inputmode="decimal"':""} value="${esc(v)}">${u?`<span>${u}</span>`:""}</div></div>`;
+    $("ferme").innerHTML=`${ch("nom","Nom de la ferme",f.nom)}
+      <div class="deux">${ch("wilaya","Wilaya / commune",f.wilaya)}${ch("associe","Associé",f.associe)}</div>
+      <div class="deux">${ch("pivots","Nombre de pivots",f.pivots,"number")}${ch("rayon","Longueur d'un pivot",f.rayon,"number","m")}</div>
+      <div class="deux">${ch("debit","Débit d'un forage",f.debit,"number","l/s")}${ch("surface","Surface du terrain",f.surface,"number","ha")}</div>
+      <div style="display:flex;gap:8px"><button class="btn" id="f-ok" style="flex:1">✓ Enregistrer</button><button class="btn sec2" id="f-no">Annuler</button></div>`;
+    $("f-no").onclick=()=>rendFerme(false);
+    $("f-ok").onclick=()=>{
+      const n=id=>parseFloat(($("f-"+id).value||"").replace(",","."))||0;
+      ferme={nom:$("f-nom").value.trim()||"Ma ferme",wilaya:$("f-wilaya").value.trim(),associe:$("f-associe").value.trim(),pivots:Math.max(1,Math.round(n("pivots"))),rayon:n("rayon"),debit:n("debit"),surface:n("surface")};
+      LS.set("ferme",ferme);
+      $("p-r").value=ferme.rayon;$("p-q").value=ferme.debit;calcPivot();
+      $("a-s").value=Math.round(Math.PI*ferme.rayon*ferme.rayon/1e4*ferme.pivots*10)/10;calcArgent();
+      majTitre();rendFerme(false);
+    };
+  }
+}
+function majTitre(){document.querySelector(".hero h1").textContent=ferme.nom&&ferme.nom!=="Ma ferme"?ferme.nom:"Pivot Sahara"}
+function editFiche(k){
+  const c=CULTURES[k];
+  const t=(id,l,v)=>`<div class="champ"><label class="ch">${l}</label><input id="e-${id}" value="${esc(v)}"></div>`;
+  const nn=(id,l,v,u)=>`<div class="champ"><label class="ch">${l}</label><div class="unite"><input id="e-${id}" type="number" inputmode="decimal" value="${v}"><span>${u}</span></div></div>`;
+  $("c-fiche").innerHTML=`<div class="carte">
+    <h3 style="font-size:20px;margin-bottom:12px">${c.emo} Modifier : ${esc(c.nom)}</h3>
+    ${t("intro","Description",c.intro)}
+    <div class="deux">${t("rdtTxt","Rendement (texte)",c.rdtTxt)}${t("eau","Eau (texte)",c.eau)}</div>
+    ${t("cycle","Période",c.cycle)}
+    <div class="deux">${nn("rdt","Rendement par défaut",c.rdt,c.unite+"/ha")}${nn("prix","Prix de vente",c.prix,"DA/"+c.unite)}</div>
+    ${nn("sel","Tolérance au sel",c.sel,"dS/m")}
+    <label class="ch">Besoin en eau par mois (mm/jour)</label>
+    <div class="edit-grid">${c.etc.map((e,i)=>`<div><label>${MOIS[i]}</label><input data-m="${i}" type="number" inputmode="decimal" step="0.5" value="${e}"></div>`).join("")}</div>
+    <div class="src" id="e-tot" style="margin:8px 0 12px"></div>
+    <label class="ch">Conseils (un par ligne)</label>
+    <textarea id="e-points" rows="6">${esc(c.points.join("\n"))}</textarea>
+    <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
+      <button class="btn" id="e-ok" style="flex:1;background:${c.col}">✓ Enregistrer</button>
+      <button class="btn sec2" id="e-no">Annuler</button>
+      <button class="btn sec2" id="e-reset" style="color:var(--rouge)">↺ Valeurs d'origine</button>
+    </div></div>`;
+  const tot=()=>{let s=0;$("c-fiche").querySelectorAll("[data-m]").forEach(i=>s+=(parseFloat(i.value)||0)*30.4);$("e-tot").textContent=`≈ ${fmt(Math.round(s*10/0.85/100)*100)} m³/ha d'eau à pomper sur l'année`};
+  $("c-fiche").querySelectorAll("[data-m]").forEach(i=>i.addEventListener("input",tot));tot();
+  $("e-no").onclick=rendFiche;
+  $("e-reset").onclick=()=>{LS.set("cult_"+k,null);try{localStorage.removeItem("ps_cult_"+k)}catch(e){}Object.assign(CULTURES[k],JSON.parse(JSON.stringify(BASE[k])));apresEdit(k)};
+  $("e-ok").onclick=()=>{
+    const v=id=>$("e-"+id).value, n=id=>parseFloat(String(v(id)).replace(",","."))||0;
+    const o={intro:v("intro"),rdtTxt:v("rdtTxt"),eau:v("eau"),cycle:v("cycle"),rdt:n("rdt"),prix:n("prix"),sel:n("sel")||c.sel,
+      etc:[...$("c-fiche").querySelectorAll("[data-m]")].map(i=>parseFloat(i.value)||0),
+      points:v("points").split("\n").map(x=>x.trim()).filter(Boolean)};
+    Object.assign(CULTURES[k],o);LS.set("cult_"+k,o);
+    LS.set("argent_"+k,null);try{localStorage.removeItem("ps_argent_"+k)}catch(e){}
+    apresEdit(k);
+  };
+}
+function apresEdit(k){rendFiche();rendCal();calcPivot();calcSel();if($("a-c").value===k)chargerCulture()}
+
+/* ============ NAVIGATION ============ */
+function aller(v){
+  document.querySelectorAll(".vue").forEach(e=>e.classList.toggle("on",e.id==="v-"+v));
+  document.querySelectorAll("#nav button").forEach(b=>b.classList.toggle("on",b.dataset.v===v));
+  LS.set("vue",v); window.scrollTo({top:0,behavior:"smooth"});
+  if(location.hash!=="#"+v) history.replaceState(null,"","#"+v);
+}
+document.querySelectorAll("#nav button").forEach(b=>b.onclick=()=>aller(b.dataset.v));
+const VUES=["accueil","pivot","cultures","argent","demarrer","journal"];
+window.addEventListener("hashchange",()=>{const h=location.hash.slice(1);if(VUES.includes(h))aller(h)});
+
+/* ============ PIVOT ============ */
+opts($("p-c"),CULTURES,"bledur");
+$("p-m").innerHTML=MOIS.map((m,i)=>`<option value="${i}">${m}</option>`).join("");$("p-m").value=2;
+function calcPivot(){
+  const r=num("p-r"),qls=num("p-q"),h=num("p-h"),t=num("p-t"),c=CULTURES[$("p-c").value],m=+$("p-m").value;
+  const ha=Math.PI*r*r/10000, qm3=qls*3.6, eff=0.85;
+  const etc=c.etc[m];
+  const besoinJ=etc*10*ha/eff;               // m³/jour brut
+  const dispoJ=qm3*h;                         // m³/jour
+  const lsha=ha?qls/ha:0;
+  const dose100=ha?qm3*t/(ha*10):0;           // mm par tour à 100 %
+  const heures=qm3?besoinJ/qm3:0;
+  const couv=besoinJ?dispoJ/besoinJ*100:100;
+  const saison=c.etc.reduce((a,e)=>a+e*30.4,0)*10/eff; // m³/ha/saison brut
+  let coul="var(--vert)",msg="✅ Ton forage suit largement le besoin de la culture ce mois-ci.";
+  if(etc===0){msg="😴 Pas de culture ce mois-ci : regarde le calendrier dans l'onglet Cultures.";}
+  else if(couv<100){coul="var(--rouge)";msg="🚨 Il manque de l'eau : réduis la surface, augmente le débit ou choisis une culture moins gourmande.";}
+  else if(couv<115){coul="var(--ble)";msg="⚠️ Ça passe tout juste : aucune marge si une pompe tombe en panne.";}
+  $("p-res").innerHTML=`
+   <div class="ligne"><span class="k">⭕ Surface du cercle</span><span class="val">${fmt(ha,1)} ha</span></div>
+   <div class="ligne"><span class="k">🚰 Débit du forage</span><span class="val">${fmt(qm3)} m³/h</span></div>
+   <div class="ligne"><span class="k">📏 Débit par hectare</span><span class="val">${fmt(lsha,2)} l/s/ha</span></div>
+   <div class="ligne"><span class="k">🌡️ Besoin de la plante (${MOIS[m]})</span><span class="val">${fmt(etc,1)} mm/j</span></div>
+   <div class="ligne"><span class="k">💧 Eau à pomper par jour</span><span class="val">${fmt(besoinJ)} m³</span></div>
+   <div class="ligne"><span class="k">⏱️ Heures de pompage nécessaires</span><span class="val">${etc?fmt(heures,1)+" h/j":"–"}</span></div>
+   <div class="ligne"><span class="k">🔄 Dose d'un tour à 100 %</span><span class="val">${fmt(dose100,1)} mm</span></div>
+   <div class="ligne"><span class="k">🌾 Eau pour toute la saison</span><span class="val">${fmt(Math.round(saison/100)*100)} m³/ha</span></div>
+   <div style="margin-top:10px;font-size:13px;font-weight:600">Couverture du besoin : ${etc?fmt(couv)+" %":"–"}</div>
+   <div class="jauge"><i style="width:${Math.min(couv,100)}%;background:${coul}"></i></div>
+   <div class="verdict" style="background:#fff;color:${coul}">${msg}</div>
+   <p class="src">Rendement d'arrosage du pivot pris à 85 %. Besoins mensuels moyens, calés sur ≈ 6 000-7 000 m³/ha pour le blé. Aux jours de pointe (sirocco), le besoin peut monter de 30 % : garde de la marge.</p>`;
+  LS.set("pivot",{r:$("p-r").value,q:$("p-q").value,h:$("p-h").value,t:$("p-t").value,c:$("p-c").value,m:$("p-m").value});
+}
+(()=>{const s=LS.get("pivot");if(s){for(const k of["r","q","h","t","c","m"])if(s[k]!=null)$("p-"+k).value=s[k]}})();
+["p-r","p-q","p-h","p-t","p-c","p-m"].forEach(i=>$(i).addEventListener("input",calcPivot));
+
+/* ============ SEL ============ */
+opts($("s-c"),CULTURES,"bledur");
+function calcSel(){
+  const g=num("s-g"),v=num("s-v"),c=CULTURES[$("s-c").value];
+  const t=g*v/1000, ec=g*1.5625, seuil=c.sel;
+  const ratio=ec/seuil;
+  let coul,txt;
+  if(ratio<0.5){coul="var(--vert)";txt="✅ Eau de bonne qualité pour cette culture.";}
+  else if(ratio<1){coul="var(--ble)";txt="⚠️ Ça reste acceptable, mais le sel va s'accumuler : lessive le sol (arrose un peu plus) et fais analyser le sol chaque année.";}
+  else{coul="var(--rouge)";txt="🚨 Trop salée pour cette culture : le rendement va baisser. Choisis une culture plus tolérante (orge) ou une autre source d'eau.";}
+  $("s-res").innerHTML=`
+   <div class="ligne"><span class="k">Salinité de l'eau</span><span class="val">${fmt(ec,1)} dS/m</span></div>
+   <div class="ligne"><span class="k">Tolérance de ${c.nom}</span><span class="val">${fmt(seuil,1)} dS/m</span></div>
+   <div class="ligne"><span class="k">Sel apporté par saison</span><span class="val">${fmt(t,1)} t/ha</span></div>
+   <div class="jauge"><i style="width:${Math.min(ratio*100,100)}%;background:${coul}"></i></div>
+   <div class="verdict" style="background:#fff;color:${coul}">${txt}</div>
+   <p class="src">Repère Adrar (INRAA) : chaque dS/m de sel en plus dans le sol = environ −4 q/ha de blé.</p>`;
+}
+["s-g","s-v","s-c"].forEach(i=>$(i).addEventListener("input",calcSel));
+
+/* ============ CULTURES ============ */
+let cSel="bledur";
+function rendChips(){
+  $("c-chips").innerHTML=Object.entries(CULTURES).map(([k,c])=>`<button class="chip${k===cSel?" on":""}" data-k="${k}" style="${k===cSel?`background:${c.col}`:""}">${c.emo} ${c.nom}</button>`).join("");
+  $("c-chips").querySelectorAll(".chip").forEach(b=>b.onclick=()=>{cSel=b.dataset.k;rendChips();rendFiche()});
+}
+function rendFiche(){
+  const c=CULTURES[cSel];
+  $("c-fiche").innerHTML=`
+   <div class="fiche-tete" style="background:${c.grad}">
+     <span class="emo">${c.emo}</span><h3>${c.nom}</h3><p>${c.intro}</p>
+     <div class="kpis"><div><b>${c.rdtTxt}</b><small>Rendement</small></div><div><b>${c.eau}</b><small>Eau</small></div><div><b>${c.cycle}</b><small>Période</small></div></div>
+   </div>
+   <div class="carte"><ul class="puces" style="--pc:${c.col}">${c.points.map(p=>`<li>${p}</li>`).join("")}</ul>
+     <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
+       <button class="btn" style="background:${c.col}" onclick="versArgent('${cSel}')">💰 Calculer ma marge</button>
+       <button class="btn sec2" onclick="versPivot('${cSel}')">💧 Mon besoin en eau</button>
+       <button class="btn sec2" onclick="editFiche('${cSel}')">✏️ Modifier</button>
+     </div></div>
+   <div class="carte"><h3 style="font-size:17px;margin-bottom:8px">Besoin en eau par mois (mm/jour)</h3>${barres(c)}</div>`;
+}
+function barres(c){
+  const max=12;
+  return `<div style="display:flex;align-items:flex-end;gap:4px;height:120px">${c.etc.map((e,i)=>`<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%">
+    <small style="font-size:10px;color:var(--gris)">${e||""}</small>
+    <div style="width:100%;height:${e/max*90}%;min-height:${e?4:0}px;background:${c.col};border-radius:6px 6px 3px 3px"></div>
+    <small style="font-size:10px;color:var(--gris);margin-top:3px">${MOIS[i][0]}</small></div>`).join("")}</div>`;
+}
+function rendCal(){
+  let h=`<table><tr><th></th>${MOIS.map(m=>`<th>${m}</th>`).join("")}</tr>`;
+  for(const c of Object.values(CULTURES)){
+    h+=`<tr><td class="nom">${c.emo} ${c.nom}</td>`;
+    for(let i=0;i<12;i++){
+      let st="";
+      if(c.cal.r.includes(i)) st=`background:${c.col}`;
+      else if(c.cal.s.includes(i)) st=`background:${c.col};opacity:.45;background-image:repeating-linear-gradient(45deg,rgba(255,255,255,.5) 0 3px,transparent 3px 6px)`;
+      else if(c.cal.c.includes(i)) st=`background:${c.col};opacity:.28`;
+      h+=`<td style="${st}"></td>`;
+    }
+    h+="</tr>";
+  }
+  $("cal").innerHTML=h+`</table><div class="leg"><span><i style="background:#999;opacity:.45;background-image:repeating-linear-gradient(45deg,rgba(255,255,255,.6) 0 2px,transparent 2px 4px)"></i>Semis</span><span><i style="background:#999;opacity:.28"></i>En culture</span><span><i style="background:#999"></i>Récolte / coupes</span></div>
+  <p class="src">Enchaînement gagnant : blé (nov → mai) puis maïs ensilage (juin → sept), ou maïs grain récolté en décembre puis blé.</p>`;
+}
+function versArgent(k){$("a-c").value=k;chargerCulture();aller("argent")}
+function versPivot(k){$("p-c").value=k;calcPivot();aller("pivot")}
+
+/* ============ ARGENT ============ */
+opts($("a-c"),CULTURES,"bledur");
+function chargerCulture(){
+  const k=$("a-c").value,c=CULTURES[k],sv=LS.get("argent_"+k,null)||null;
+  $("a-r").value=sv?.r??c.rdt; $("a-p").value=sv?.p??c.prix;
+  $("a-ru").textContent=c.unite+"/ha"; $("a-pu").textContent="DA/"+c.unite;
+  $("a-postes").innerHTML=POSTES.map(([id,l])=>`<div class="champ" style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><label class="ch" style="flex:1;margin:0;font-size:13.5px;color:var(--encre)">${l}</label><input data-p="${id}" type="number" inputmode="decimal" style="width:130px;padding:9px 11px" value="${sv?.ch?.[id]??CHARGES[k][id]}"></div>`).join("");
+  $("a-postes").querySelectorAll("input").forEach(i=>i.addEventListener("input",calcArgent));
+  calcArgent();
+}
+function calcArgent(){
+  const k=$("a-c").value,c=CULTURES[k],S=num("a-s"),R=num("a-r"),P=num("a-p");
+  const ch={};let chHa=0;$("a-postes").querySelectorAll("input").forEach(i=>{const v=parseFloat(i.value)||0;ch[i.dataset.p]=v;chHa+=v});
+  const inv=Math.max(num("a-piv")+num("a-for")-num("a-aid"),0),dur=Math.max(num("a-dur"),1),nb=+$("a-nb").value;
+  const amortHa=S?inv/dur/nb/S:0;
+  const prodHa=R*P, coutHa=chHa+amortHa, margeHa=prodHa-coutHa;
+  const seuil=P?coutHa/P:0, total=margeHa*S;
+  const coul=margeHa>0?"var(--vert)":"var(--rouge)";
+  const top=[...POSTES].map(([id,l])=>[l,ch[id]]).sort((a,b)=>b[1]-a[1]);
+  const cols=["#e76f2e","#e8a317","#1f7ae0","#7b4fd6","#13834f","#d93a4a","#2e9e5b","#b5651d","#5d6b63"];
+  let acc=0;const seg=top.map(([l,v],i)=>{const w=chHa?v/chHa*100:0;return `<i style="width:${w}%;background:${cols[i]};display:inline-block;height:100%"></i>`}).join("");
+  LS.set("argent_"+k,{r:$("a-r").value,p:$("a-p").value,ch});
+  $("a-res").innerHTML=`
+   <div class="grille">
+     <div class="stat c-vert"><span class="ico">💵</span><div class="v">${fmt(prodHa/1000)}k</div><div class="l">DA de produit / ha</div></div>
+     <div class="stat c-sable"><span class="ico">🧾</span><div class="v">${fmt(coutHa/1000)}k</div><div class="l">DA de coût / ha (amorti compris)</div></div>
+     <div class="stat ${margeHa>0?"c-vert":"c-rouge"}"><span class="ico">${margeHa>0?"📈":"📉"}</span><div class="v">${fmt(margeHa/1000)}k</div><div class="l">DA de marge / ha</div></div>
+     <div class="stat c-ble"><span class="ico">🎯</span><div class="v">${fmt(seuil,1)}</div><div class="l">${c.unite}/ha pour ne pas perdre d'argent</div></div>
+   </div>
+   <div class="carte" style="margin-top:10px">
+     <div class="ligne"><span class="k">Surface</span><span class="val">${fmt(S,1)} ha</span></div>
+     <div class="ligne"><span class="k">Production totale</span><span class="val">${fmt(R*S)} ${c.unite}</span></div>
+     <div class="ligne"><span class="k">Chiffre d'affaires</span><span class="val">${fmt(prodHa*S/1e6,2)} M DA</span></div>
+     <div class="ligne"><span class="k">Amortissement / ha</span><span class="val">${fmt(amortHa)} DA</span></div>
+     <div class="ligne"><span class="k"><b>Résultat de la culture</b></span><span class="val" style="color:${coul};font-size:24px">${total>=0?"+":""}${fmt(total/1e6,2)} M DA</span></div>
+     <div style="margin-top:12px;font-size:13px;font-weight:600">Où part l'argent (hors amortissement)</div>
+     <div class="jauge" style="height:16px;display:flex">${seg}</div>
+     <div class="leg">${top.slice(0,5).map(([l,v],i)=>`<span><i style="background:${cols[i]}"></i>${l.replace(/^\S+\s/,"")} ${fmt(chHa?v/chHa*100:0)}%</span>`).join("")}</div>
+     <div class="verdict" style="background:${margeHa>0?"var(--vert-c)":"var(--rouge-c)"};color:${coul}">${margeHa>0?`👍 Rentable : il te reste ${fmt(R-seuil,1)} ${c.unite}/ha de marge de sécurité au-dessus du seuil.`:`⛔ Pas rentable avec ces chiffres : il faut au moins ${fmt(seuil,1)} ${c.unite}/ha, ou baisser les coûts.`}</div>
+     <p class="src">Pour le blé, tous les repères donnent un seuil autour de 40 q/ha. Les prix des cultures autres que le blé sont des exemples à vérifier.</p>
+   </div>`;
+}
+["a-s","a-r","a-p","a-piv","a-for","a-aid","a-dur","a-nb"].forEach(i=>$(i).addEventListener("input",calcArgent));
+$("a-c").addEventListener("change",chargerCulture);
+
+/* ============ DÉMARRER ============ */
+let ckState=LS.get("check",{}), dbRef=null, ckDoc=null;
+function rendCheck(){
+  const n=ETAPES.filter(e=>ckState[e[0]]).length,p=n/ETAPES.length;
+  $("anneau").style.strokeDashoffset=169.6*(1-p); $("anneauT").textContent=Math.round(p*100)+"%";
+  $("ck-etat").textContent=`${n} étape${n>1?"s":""} sur ${ETAPES.length}`+(ckDoc?" · partagé avec ton associé":"");
+  $("checklist").innerHTML=ETAPES.map(([id,e,t,d],i)=>`<div class="etape${ckState[id]?" fait":""}" data-id="${id}"><span class="case">${ckState[id]?"✓":""}</span><div><b>${e} ${i+1}. ${t}</b><small>${d}</small></div></div>`).join("");
+  $("checklist").querySelectorAll(".etape").forEach(el=>el.onclick=()=>{
+    const id=el.dataset.id; ckState={...ckState,[id]:!ckState[id]}; LS.set("check",ckState); rendCheck();
+    if(ckDoc) ckDoc.set({done:ckState}).catch(()=>{});
+  });
+}
+$("orgs").innerHTML=ORGS.map(([e,n,d,c])=>`<div class="outil"><span class="lo ${c}">${e}</span><div><b>${n}</b><small>${d}</small></div></div>`).join("");
+$("outils").innerHTML=OUTILS.map(([e,n,u,d,t,col])=>`<a class="outil" href="${u}" target="_blank" rel="noopener"><span class="lo" style="background:${col}1f">${e}</span><div><b>${n}<span class="tag" style="background:${col}22;color:${col}">${t}</span></b><small>${d}</small></div></a>`).join("");
+
+/* ============ JOURNAL ============ */
+let entrees=[], jFiltre="tout", jMode="local", users=null, profils={};
+$("j-type").innerHTML=Object.entries(TYPES).map(([k,t])=>`<option value="${k}">${t[0]} ${t[1]}</option>`).join("");
+$("j-date").value=new Date().toISOString().slice(0,10);
+function majUnite(){const u=TYPES[$("j-type").value][2];$("j-ql").textContent="Quantité"+(u?` (${u})`:"");$("j-q").disabled=!u;if(!u)$("j-q").value=""}
+$("j-type").addEventListener("change",majUnite);majUnite();
+async function rendJournal(){
+  const tot={eau:0,cout:0,rec:0,n:entrees.length};
+  entrees.forEach(e=>{if(e.type==="irrigation")tot.eau+=+e.q||0;if(e.type==="recolte")tot.rec+=+e.q||0;tot.cout+=+e.cout||0});
+  $("j-tot").innerHTML=`
+   <div class="stat c-eau"><span class="ico">💧</span><div class="v">${fmt(tot.eau)}</div><div class="l">m³ arrosés</div></div>
+   <div class="stat c-sable"><span class="ico">💸</span><div class="v">${fmt(tot.cout/1000)}k</div><div class="l">DA dépensés</div></div>
+   <div class="stat c-ble"><span class="ico">🌾</span><div class="v">${fmt(tot.rec)}</div><div class="l">q récoltés</div></div>
+   <div class="stat c-violet"><span class="ico">📒</span><div class="v">${tot.n}</div><div class="l">entrées</div></div>`;
+  $("j-filtres").innerHTML=[["tout","Tout","#16241c"],...Object.entries(TYPES).map(([k,t])=>[k,t[0]+" "+t[1],t[3]])].map(([k,l,c])=>`<button class="chip${jFiltre===k?" on":""}" data-f="${k}" style="${jFiltre===k?`background:${c}`:""}">${l}</button>`).join("");
+  $("j-filtres").querySelectorAll(".chip").forEach(b=>b.onclick=()=>{jFiltre=b.dataset.f;rendJournal()});
+  const liste=entrees.filter(e=>jFiltre==="tout"||e.type===jFiltre);
+  if(users&&jMode==="partage"){
+    const ids=[...new Set(liste.map(e=>e.auteur).filter(Boolean))];
+    if(ids.length){try{profils=await users.profiles(ids)||{}}catch(e){}}
+  }
+  $("j-liste").innerHTML=liste.length?"":`<div class="carte" style="text-align:center;color:var(--gris)">🌱 Rien encore. Note ton premier arrosage !</div>`;
+  for(const e of liste){
+    const t=TYPES[e.type]||TYPES.note;
+    const el=document.createElement("div");el.className="entree";
+    const auteur=e.auteur&&profils[e.auteur]?(profils[e.auteur].name||"Associé"):"";
+    el.innerHTML=`<span class="ic" style="background:${t[4]}">${t[0]}</span><div class="m"><b></b><small></small><p></p></div><button class="x" title="Supprimer">✕</button>`;
+    el.querySelector("b").textContent=t[1]+(e.q?` · ${fmt(+e.q)} ${t[2]}`:"")+(e.cout?` · ${fmt(+e.cout)} DA`:"");
+    el.querySelector("small").textContent=new Date(e.date+"T12:00").toLocaleDateString("fr-FR",{weekday:"short",day:"numeric",month:"long",year:"numeric"})+(auteur?` · par ${auteur}`:"");
+    el.querySelector("p").textContent=e.note||"";
+    el.querySelector(".x").onclick=()=>supprimer(e);
+    $("j-liste").appendChild(el);
+  }
+}
+function trier(){entrees.sort((a,b)=>(b.date||"").localeCompare(a.date||"")||(b.t||0)-(a.t||0))}
+async function ajouter(){
+  const e={type:$("j-type").value,date:$("j-date").value||new Date().toISOString().slice(0,10),q:$("j-q").value||"",cout:$("j-cout").value||"",note:$("j-note").value.trim(),t:Date.now()};
+  if(!e.q&&!e.cout&&!e.note){$("j-note").focus();return}
+  const id="e"+e.t+Math.random().toString(36).slice(2,6);
+  if(jMode==="partage"&&dbRef){
+    try{ if(users){try{e.auteur=await users.id()}catch(x){}} await dbRef.collection("journal").doc(id).set(e); }
+    catch(err){ $("j-etat").className="etat c-rouge"; $("j-etat").textContent="⚠️ Impossible d'enregistrer en ligne."; return; }
+  } else { entrees.push({...e,id}); trier(); LS.set("journal",entrees); rendJournal(); }
+  $("j-q").value="";$("j-cout").value="";$("j-note").value="";
+}
+async function supprimer(e){
+  if(!confirmerSuppr(e))return;
+  if(jMode==="partage"&&dbRef){try{await dbRef.collection("journal").doc(e.id).delete()}catch(x){}}
+  else{entrees=entrees.filter(x=>x.id!==e.id);LS.set("journal",entrees);rendJournal()}
+}
+let attente=null;
+function confirmerSuppr(e){ if(attente===e.id){attente=null;return true} attente=e.id; setTimeout(()=>{if(attente===e.id)attente=null},3000);
+  $("j-etat").className="etat c-rouge";$("j-etat").textContent="Appuie encore sur ✕ pour confirmer la suppression.";setTimeout(etatJournal,3000);return false}
+function etatJournal(){
+  if(jMode==="partage"){$("j-etat").className="etat c-vert";$("j-etat").textContent="🔗 Journal partagé : ton associé voit tout ce que tu notes, en direct.";}
+  else{$("j-etat").className="etat c-ble";$("j-etat").textContent="📱 Journal enregistré sur ce téléphone.";}
+}
+$("j-add").onclick=ajouter;
+function docsDe(s){if(!s)return[];const a=s.docs||s;return Array.from(a).map(d=>typeof d.data==="function"?{id:d.id,...d.data()}:d)}
+
+/* ============ IA ============ */
+let sample=null, hist=[], imgBlob=null;
+const IDEES=["Quel engrais pour mon blé au tallage ?","Mes feuilles jaunissent, pourquoi ?","Combien de tours par semaine en mars ?","Blé dur ou maïs ensilage : que choisir ?"];
+$("idees").innerHTML=IDEES.map(q=>`<button>${q}</button>`).join("");
+$("idees").querySelectorAll("button").forEach(b=>b.onclick=()=>{$("ia-txt").value=b.textContent;demander()});
+$("fab").onclick=()=>$("modal").classList.add("on");
+$("fermer").onclick=()=>$("modal").classList.remove("on");
+$("modal").onclick=e=>{if(e.target.id==="modal")$("modal").classList.remove("on")};
+$("ia-img").onchange=e=>{imgBlob=e.target.files[0]||null;if(imgBlob)bulle("📷 Photo ajoutée, pose ta question.","lui")};
+function bulle(t,qui){const b=document.createElement("div");b.className="bulle "+qui;b.textContent=t;$("fil").appendChild(b);$("fil").scrollTop=1e9;return b}
+const CONTEXTE=`Tu es un ingénieur agronome expert de l'agriculture saharienne en Algérie (Adrar, El Ménéa, Ouargla, El Oued, Ghardaïa, Timimoun), spécialiste de l'irrigation sous pivot. Tu parles à des débutants : réponds en français simple, en tutoyant, de façon courte et concrète (listes courtes, chiffres en unités algériennes : ha, m³, q, DA). Repères : blé dur sous pivot 50-80 q/ha, ~6000 m³/ha, semis mi-nov à mi-déc, récolte mai, CCLS 6000 DA/q (tendre 5000), seuil ~40 q/ha ; azote ≈3,5 u/q ; maïs ensilage 80-90 j après le blé ~37 t/ha ; risque n°1 le sel (−4 q/ha par dS/m) ; verse au sirocco. Si une photo est fournie, décris ce que tu vois et donne les causes probables. Termine si besoin par « à confirmer avec un technicien de la DSA/ITDAS » quand c'est un diagnostic. Ne donne jamais de doses de produits phytosanitaires précises : renvoie à l'étiquette et au technicien.`;
+async function demander(){
+  const q=$("ia-txt").value.trim(); if(!q||!sample)return;
+  $("ia-txt").value=""; $("idees").style.display="none";
+  bulle(q,"moi"); const r=bulle("Je réfléchis… 🌱","lui");
+  hist.push({role:"user",content:hist.length?q:CONTEXTE+"\n\nQuestion : "+q});
+  const opt={cache:false,onText:({text})=>{r.textContent=text;$("fil").scrollTop=1e9}};
+  if(imgBlob){opt.images=[imgBlob]}
+  try{const res=await sample(hist,opt);r.textContent=res.text;hist.push({role:"assistant",content:res.text})}
+  catch(e){hist.pop();r.textContent=e&&e.code==="rate_limited"?"Trop de questions d'un coup, réessaie dans une minute.":"Désolé, je n'ai pas pu répondre. Réessaie.";if(e&&e.code==="not_granted")$("fab").classList.remove("on")}
+  imgBlob=null;$("ia-img").value="";
+}
+$("ia-go").onclick=demander;
+$("ia-txt").addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();demander()}});
+
+/* ============ DÉMARRAGE ============ */
+if(!LS.get("pivot",null)){$("p-r").value=ferme.rayon;$("p-q").value=ferme.debit}
+rendFerme(false);majTitre();
+$("a-s").value=Math.round(Math.PI*ferme.rayon*ferme.rayon/1e4*ferme.pivots*10)/10;
+calcPivot();calcSel();rendChips();rendFiche();rendCal();chargerCulture();rendCheck();
+entrees=LS.get("journal",[]);trier();etatJournal();rendJournal();
+const h=location.hash.slice(1);aller(VUES.includes(h)?h:(LS.get("vue","accueil")));
+const heure=new Date().getHours();$("salut").textContent=(heure<12?"☀️ Sbah el khir":heure<18?"🌤️ Bon après-midi":"🌙 Bonsoir")+" · saison 2026-2027";
+
+
+</script>
+</body>
+</html>
